@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Travel Destination Recommender</title>
+
+    <script src="data.js"></script>
+    <script>
+        //array to hold all the choices the user selects
+        let choices = [];
+        function init() {
+            //first thing we check if browser is outdated
+            if (!document.getElementById) {
+                alert("This browser is outdated. Please use another browser");
+                window.location = "https://www.google.com/chrome/";
+            }
+            else {
+                //create the header bar
+                let headerEl = document.createElement('header');
+                let txtHeader = document.createTextNode('Travel Destination Recommender');
+                headerEl.appendChild(txtHeader);
+                document.getElementsByTagName('body')[0].insertBefore(headerEl, document.getElementsByTagName('body')[0].firstChild);
+                createHelper('init');
+            }
+        }
+        function fadeIn(element) {
+            let opacity = 0;
+
+            function animate() {
+                opacity += 0.02;
+                element.style.opacity = opacity;
+
+                if (opacity < 1) {
+                    requestAnimationFrame(animate);
+                }
+            }
+            requestAnimationFrame(animate);
+        }
+        function getLocalStroage() {
+            console.log("passed");
+            //if there are cookies, fill the form from values in cookies
+            if (getCookie("firstName") != null) {
+                if (document.getElementById("myForm")) {
+                    document.getElementById("fName").setAttribute('value', getCookie("firstName"));
+                    document.getElementById("lName").setAttribute('value', getCookie("lastName"));
+                    document.getElementById("email").setAttribute('value', getCookie("email"));
+                }
+            }
+            //if cookies are null, check for localStorage
+            else {
+                if (localStorage.getItem("firstName") == null) {
+                    return; // for browsers other than chrome
+                }
+                //if firstName field has a value in localStorage
+                if (localStorage.getItem("firstName") != "") {
+                    //if form is created
+                    if (document.getElementById("myForm")) {
+                        document.getElementById("fName").setAttribute('value', localStorage.getItem("firstName"));
+                        document.getElementById("lName").setAttribute('value', localStorage.getItem("lastName"));
+                        document.getElementById("email").setAttribute('value', localStorage.getItem("email"));
+                    }
+                }
+            }
+        }
+        function getCookie(cname) {
+            let name = cname + "=";
+            let decodedCookie = decodeURIComponent(document.cookie);
+            let ca = decodedCookie.split(';');
+            for (let i = 0; i < ca.length; i++) {
+                let c = ca[i];
+                while (c.charAt(0) == ' ') {
+                    c = c.substring(1);
+                }
+                if (c.indexOf(name) == 0) {
+                    return c.substring(name.length, c.length);
+                }
+            }
+            return null
+        }
+        function setCookie(cname, cvalue, exdays) {
+            const d = new Date();
+            d.setTime(d.getTime() + (exdays * 24 * 60 * 60 * 1000));
+            let expires = "expires=" + d.toUTCString();
+            document.cookie = cname + "=" + cvalue + ";" + expires + ";path=/";
+        }
+        function validation() {
+            let fName = document.getElementById("fName").value;
+            let lName = document.getElementById("lName").value;
+            let email = document.getElementById("email").value;
+
+            if (fName == "" || lName == "" || email == "") {
+                alert("Please fill all the fields");
+                return false;
+            }
+            //if cookies are enabled
+            if (navigator.cookieEnabled) {
+                setCookie("firstName", fName);
+                setCookie("lastName", lName);
+                setCookie("email", email);
+            }
+            //if not use localStorage
+            else {
+                localStorage.setItem("firstName", fName);
+                localStorage.setItem("lastName", lName);
+                localStorage.setItem("email", email);
+            }
+            alert("User info saved!");
+
+            return true;
+        }
+        function createForm() {
+            // create the form element
+            var form = document.createElement('form');
+            form.setAttribute('id', 'myForm');
+            form.setAttribute('onsubmit', 'return validation();');
+
+            var header = document.createElement('h3');
+            var txt = document.createTextNode('Please fill the form to save your destination!');
+            header.appendChild(txt);
+
+            // create the input element for first name
+            var firstNameInput = document.createElement('input');
+            firstNameInput.setAttribute('type', 'text');
+            firstNameInput.setAttribute('value', '');
+            firstNameInput.setAttribute('id', 'fName');
+            firstNameInput.setAttribute('name', 'firstName');
+            firstNameInput.setAttribute('placeholder', 'First Name');
+
+            // last name
+            var lastNameInput = document.createElement('input');
+            lastNameInput.setAttribute('type', 'text');
+            lastNameInput.setAttribute('id', 'lName');
+            lastNameInput.setAttribute('name', 'lastName');
+            lastNameInput.setAttribute('placeholder', 'Last Name');
+
+            // email
+            var emailInput = document.createElement('input');
+            emailInput.setAttribute('type', 'text');
+            emailInput.setAttribute('id', 'email');
+            emailInput.setAttribute('name', 'email');
+            emailInput.setAttribute('placeholder', 'Email');
+
+            // submit button
+            var submitButton = document.createElement('button');
+            submitButton.setAttribute('type', 'submit');
+            submitButton.appendChild(document.createTextNode("Submit"));
+
+            // append the elements to the form
+            form.appendChild(header);
+            form.appendChild(firstNameInput);
+            form.appendChild(lastNameInput);
+            form.appendChild(emailInput);
+            form.appendChild(submitButton);
+
+            // append the form to the div
+            fadeIn(form);
+            document.getElementById('destinations').appendChild(form);
+
+        }
+        function createChoicesList(selectedOption) {
+            //create an unordered list for the choices user selected
+            let divChoices = document.createElement("div");
+            divChoices.setAttribute('id', 'divChoices');
+
+            let ulElement = document.createElement("ul");
+
+            let text = document.createTextNode("Your choices are: ");
+
+            for (choice of choices) {
+                let liElement = document.createElement("li");
+                let liText = document.createTextNode(choice);
+                liElement.appendChild(liText);
+                ulElement.appendChild(liElement);
+            }
+            let text2 = document.createTextNode("Your destination is:")
+            let h3el = document.createElement('h3');
+            h3el.appendChild(document.createTextNode(selectedOption.value));
+            let brEl = document.createElement('br');
+            divChoices.appendChild(text2);
+            divChoices.append(h3el);
+            divChoices.appendChild(brEl);
+            divChoices.appendChild(text);
+            divChoices.appendChild(brEl);
+            divChoices.appendChild(ulElement);
+
+            fadeIn(divChoices);
+            document.getElementById("destinations").appendChild(divChoices);
+        }
+
+        function removeElements(selectedOption) {
+            //to remove the <select> elements
+            while (selectedOption != 'init' && selectedOption.parentNode.nextSibling) {
+                selectedOption.parentNode.parentNode.removeChild(selectedOption.parentNode.parentNode.lastChild);
+                //remove last element of choices array whenever we remove a child node
+                choices.pop();
+            }
+            //to remove the choices list and the form
+            while (document.getElementById("destinations").firstChild) {
+                document.getElementById("destinations").removeChild(document.getElementById("destinations").firstChild);
+            }
+        }
+
+        function createHelper(selectedOption) {
+            removeElements(selectedOption);
+
+            //if it is the last element of the tree, display the destination, choices list and the form
+            if (data[selectedOption.value] === undefined && selectedOption != 'init' && selectedOption.value != '--Select--') {
+                createChoicesList(selectedOption);
+                createForm();
+                getLocalStroage();
+            }
+            else {
+                if (selectedOption != 'init') {
+                    if (selectedOption.value != '--Select--') {
+                        //push to choices array whenever user selects an option
+                        choices.push(selectedOption.value);
+                    }
+                }
+                //create div container that will hold the text nodes and the select tags
+                let divContainer = document.createElement('div');
+
+                document.getElementsByTagName('body')[0].appendChild(divContainer);
+
+                //create select element
+                let selectElement = document.createElement('select');
+
+                selectElement.setAttribute('onchange', 'createHelper(this);');
+
+                //if it is the init element do data[selectedOption] because it already is a text value
+                const options = (selectedOption == 'init') ? data[selectedOption] : data[selectedOption.value];
+
+                //get the first element(question) of options and put it as a text node
+                let textElement = document.createTextNode(options[0]);
+                divContainer.appendChild(textElement);
+
+                //create an artificial first option to hold --Select-- value
+                let firstOptionEl = document.createElement('option');
+                firstOptionEl.setAttribute('value', '--Select--');
+                firstOptionEl.appendChild(document.createTextNode('--Select--'));
+                selectElement.appendChild(firstOptionEl);
+
+                //exclude first element
+                for (let option of options.slice(1)) {
+                    let optionElement = document.createElement('option');
+                    optionElement.setAttribute('value', option);
+                    optionElement.appendChild(document.createTextNode(option));
+                    selectElement.appendChild(optionElement);
+                }
+                divContainer.appendChild(selectElement);
+                fadeIn(divContainer);
+                document.getElementById("questions").appendChild(divContainer);
+            }
+        }
+    </script>
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body onload="init()">
+    <div id="questions"></div>
+    <div id="destinations"></div>
+</body>
+
+</html>

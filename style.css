@@ -1,0 +1,108 @@
+body {
+    margin: 0;
+}
+
+select {
+    padding: 10px;
+    font-size: 16px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    outline: none;
+    background-color: #fff;
+    color: #333;
+}
+
+select::after {
+    content: '\25BC';
+    /* Unicode character for down arrow */
+    position: absolute;
+    top: 50%;
+    right: 10px;
+    transform: translateY(-50%);
+    pointer-events: none;
+}
+
+select option {
+    padding: 10px;
+    background-color: #fff;
+    color: #333;
+}
+
+select option:hover {
+    background-color: #e0e0e0;
+}
+
+div {
+    display: grid;
+}
+
+form {
+    max-width: 300px;
+    margin: 20px auto;
+    padding: 15px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    background-color: #f8f8f8;
+}
+
+form input {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 10px;
+    box-sizing: border-box;
+}
+
+form button {
+    width: 100%;
+    padding: 10px;
+    background-color: #4caf50;
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+form button:hover {
+    background-color: #45a049;
+}
+
+h3 {
+    margin-top: 5px;
+}
+
+#questions {
+    padding-top: 10px;
+    margin: auto;
+    width: 30%;
+}
+
+#destinations {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+}
+
+#divChoices {
+    margin: auto;
+    width: 50%;
+}
+
+ul {
+    list-style-type: none;
+    padding: 0;
+    margin: 0;
+    background-color: #f4f4f4;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+}
+
+li {
+    padding: 10px;
+    border-bottom: 1px solid #ddd;
+}
+
+header {
+    background-color: #333;
+    color: #fff;
+    padding: 15px;
+    text-align: center;
+}
