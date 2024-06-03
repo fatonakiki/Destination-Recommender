@@ -2,6 +2,8 @@
 University project featuring:
 <ul>
 <li>
+  Dom Manipulation
+<li>
   Interactive Form
 </li>
 <li>
