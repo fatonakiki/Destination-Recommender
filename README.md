@@ -1,6 +1,17 @@
 # Destination-Recommender
 University project featuring:
--Interactive Form
--Dynamic Content Generation based on user choices
--Reusable Function
--Cookies & Local Storage
+<ul>
+<li>
+  Interactive Form
+</li>
+<li>
+  Dynamic Content Generation based on user choices
+</li>
+<li>
+  Reusable Function
+</li>
+<li>
+  Cookies & Local Storage
+</li>
+</ul>
+
